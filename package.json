@@ -1,0 +1,27 @@
+{
+  "name": "express_guvi_workspace",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/beni2408/express-guvi-workspace#readme",
+  "bugs": {
+    "url": "https://github.com/beni2408/express-guvi-workspace/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beni2408/express-guvi-workspace.git"
+  },
+  "license": "ISC",
+  "author": "jascar benish",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": " node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
