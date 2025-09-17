@@ -1,6 +1,8 @@
-export const verifyUserByID = (req, res, next) => {
+import mongoose from "mongoose";
+
+export const verifyMongooseID = (req, res, next) => {
   const { id } = req.params;
-  if (!id || isNaN(Number(id))) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       status: "error",
       message: "Invalid ID",

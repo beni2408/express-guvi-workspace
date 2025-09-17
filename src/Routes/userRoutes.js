@@ -6,7 +6,7 @@ import {
   updateUserByID,
   deleteUserByID,
 } from "../Controllers/userController.js";
-import { verifyUserByID } from "../Middlewares/userMiddleware.js";
+import { verifyMongooseID } from "../Middlewares/userMiddleware.js";
 
 const userRouter = Router();
 userRouter.use((req, res, next) => {
@@ -23,11 +23,11 @@ userRouter.post("/", createUser); //POST http://localhost:8000//api/users/
 userRouter.get("/", getAllUsers);
 
 // get user by ID
-userRouter.get("/:id", verifyUserByID, getUserByID);
+userRouter.get("/:id", verifyMongooseID, getUserByID);
 
 // update user by ID
-userRouter.put("/:id", verifyUserByID, updateUserByID);
+userRouter.put("/:id", verifyMongooseID, updateUserByID);
 
 //delete user by Id
-userRouter.delete("/:id", verifyUserByID, deleteUserByID);
+userRouter.delete("/:id", verifyMongooseID, deleteUserByID);
 export default userRouter;

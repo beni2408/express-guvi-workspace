@@ -1,21 +1,26 @@
 const users = [];
-
+import UserModel from "../models/User.js";
 /// Create user
-export const createUser = (req, res) => {
+export const createUser = async (req, res) => {
   const { name, email, password, gender } = req.body;
-  if (users.find((user) => user.email === email)) {
-    return res
-      .status(400)
-      .json({ message: "User already exists", status: "error" });
-  }
-  const newUser = {
-    id: users.length + 1,
+
+  // const newUser = {
+  //   id: users.length + 1,
+  //   name,
+  //   email,
+  //   password,
+  //   gender,
+  // };
+  const newUser = new UserModel({
     name,
     email,
     password,
     gender,
-  };
-  users.push(newUser);
+  });
+
+  await newUser.save(); // saves to the database // async operation
+
+  // users.push(newUser);
 
   res.status(201).json({
     status: "success",
@@ -25,22 +30,27 @@ export const createUser = (req, res) => {
 };
 
 /// read all user
-export const getAllUsers = (req, res) => {
+export const getAllUsers = async (req, res) => {
+  const allusers = await UserModel.find().select(
+    "-password -__v -createdAt -updatedAt "
+  );
   res.status(200).json({
     status: "success",
     message: "Users fetched successfully",
-    data: users,
+    data: allusers,
   });
 };
 
 /// Read user by ID
-export const getUserByID = (req, res) => {
+export const getUserByID = async (req, res) => {
   console.log(req.params);
 
   const { id } = req.params;
 
-  const user = users.find((user) => user.id === parseInt(id));
-  if (!user) {
+  const userbyid = await UserModel.findById(id).select(
+    "-password -__v -createdAt -updatedAt "
+  );
+  if (!userbyid) {
     return res.status(404).json({
       status: "error",
       message: "User not found",
@@ -49,7 +59,7 @@ export const getUserByID = (req, res) => {
   res.status(200).json({
     status: "success",
     message: "User fetched successfully",
-    data: user,
+    data: userbyid,
   });
 
   //req.body => safe transaction
@@ -58,23 +68,14 @@ export const getUserByID = (req, res) => {
 };
 
 /// update user by id
-export const updateUserByID = (req, res) => {
+export const updateUserByID = async (req, res) => {
   const { id } = req.params;
   const newData = req.body;
 
-  const userIndex = users.findIndex((user) => user.id === Number(id));
-  if (userIndex === -1) {
-    return res.status(404).json({
-      status: "error",
-      message: "User not found",
-    });
-  }
-  const updatedUser = {
-    ...users[userIndex],
-    ...newData,
-    id: users[userIndex].id,
-  };
-  users[userIndex] = updatedUser;
+  const updatedUser = await UserModel.findByIdAndUpdate(id, newData, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     status: "success",
@@ -84,16 +85,10 @@ export const updateUserByID = (req, res) => {
 };
 
 ///Delete User by ID
-export const deleteUserByID = (req, res) => {
+export const deleteUserByID = async (req, res) => {
   const { id } = req.params;
-  const userIndex = users.findIndex((user) => user.id === Number(id));
-  if (userIndex === -1) {
-    return res.status(404).json({
-      status: "error",
-      message: "User not found",
-    });
-  }
-  const deletedData = users.splice(userIndex, 1);
+  const deletedData = await UserModel.findByIdAndDelete(id);
+
   res.status(200).json({
     status: "success",
     message: "User deleted successfully",
