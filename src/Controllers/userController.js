@@ -38,12 +38,7 @@ export const getUserByID = (req, res) => {
   console.log(req.params);
 
   const { id } = req.params;
-  //   if (!id || isNaN(Number(id))) {
-  //     return res.status(400).json({
-  //       status: "error",
-  //       message: "Invalid ID",
-  //     });
-  //   }
+
   const user = users.find((user) => user.id === parseInt(id));
   if (!user) {
     return res.status(404).json({
